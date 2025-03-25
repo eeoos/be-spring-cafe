@@ -9,5 +9,5 @@ public interface UserRepository {
     Long save(User user);
     Optional<User> findBySeq(Long seq);
     List<User> findAll();
-    void update(User updatedUser);
+    Long update(User updatedUser);
 }

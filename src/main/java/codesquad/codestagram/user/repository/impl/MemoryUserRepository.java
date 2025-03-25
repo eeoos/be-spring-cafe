@@ -36,7 +36,8 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public void update(User updatedUser) {
+    public Long update(User updatedUser) {
         store.replace(updatedUser.getSeq(), updatedUser);
+        return updatedUser.getSeq();
     }
 }
