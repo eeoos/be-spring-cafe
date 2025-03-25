@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/users")
+//@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -23,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/signUp")
+    @PostMapping("/users/signUp")
     public String signUp(@ModelAttribute SignUpRequest request,
                          RedirectAttributes redirectAttributes) { // @ModelAttribute 공부,
         try {
@@ -36,21 +36,21 @@ public class UserController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public String showUserList(Model model) {
         List<User> users = userService.findUsers();
         model.addAttribute("users", users);
         return "user/list";
     }
 
-    @GetMapping("/{userSeq}")
+    @GetMapping("/users/{userSeq}")
     public String showUserProfile(@PathVariable Long userSeq, Model model) {
         User user = userService.findUser(userSeq);
         model.addAttribute("user", user);
         return "user/profile";
     }
 
-    @GetMapping("/{userSeq}/verify")
+    @GetMapping("/users/{userSeq}/verify")
     public String verifyPasswordForm(@PathVariable Long userSeq, Model model) {
         userService.findUser(userSeq);
 
@@ -58,7 +58,7 @@ public class UserController {
         return "user/passwordVerifyForm";
     }
 
-    @PostMapping("/{userSeq}/verify-password")
+    @PostMapping("/users/{userSeq}/verify-password")
     public String verifyPassword(@PathVariable Long userSeq,
                                  @RequestParam String password,
                                  RedirectAttributes redirectAttributes) {
@@ -78,7 +78,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/{userSeq}/form")
+    @GetMapping("/users/{userSeq}/form")
     public String updateUserProfileForm(@PathVariable Long userSeq, Model model) {
         User user = userService.findUser(userSeq);
         model.addAttribute("user", user);
@@ -86,13 +86,12 @@ public class UserController {
     }
 
 
-    @PutMapping("/{userSeq}")
+    @PutMapping("/users/{userSeq}")
     public String update(@PathVariable Long userSeq,
                          @ModelAttribute UserUpdateRequest request,
                          RedirectAttributes redirectAttributes) {
         try {
             userService.updateUser(request.toEntity(userSeq));
-            redirectAttributes.addFlashAttribute("message", "회원정보가 성공적으로 수정되었습니다.");
             return "redirect:/users";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
