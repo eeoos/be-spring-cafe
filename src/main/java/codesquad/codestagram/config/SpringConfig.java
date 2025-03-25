@@ -1,9 +1,8 @@
 package codesquad.codestagram.config;
 
 import codesquad.codestagram.article.repository.ArticleRepository;
-import codesquad.codestagram.article.repository.impl.MemoryArticleRepository;
+import codesquad.codestagram.article.repository.impl.JdbcArticleRepository;
 import codesquad.codestagram.user.repository.impl.JdbcUserRepository;
-import codesquad.codestagram.user.repository.impl.MemoryUserRepository;
 import codesquad.codestagram.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +26,7 @@ public class SpringConfig {
 
     @Bean
     public ArticleRepository articleRepository() {
-        return new MemoryArticleRepository();
+//        return new MemoryArticleRepository();
+        return new JdbcArticleRepository(datasource);
     }
 }
