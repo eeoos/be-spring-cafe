@@ -2,29 +2,31 @@ package codesquad.codestagram.config;
 
 import codesquad.codestagram.article.repository.ArticleRepository;
 import codesquad.codestagram.article.repository.impl.MemoryArticleRepository;
+import codesquad.codestagram.user.repository.impl.JdbcUserRepository;
 import codesquad.codestagram.user.repository.impl.MemoryUserRepository;
 import codesquad.codestagram.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.sql.DataSource;
+
 @Configuration
 public class SpringConfig {
 
+    private final DataSource datasource;
+
+    public SpringConfig(DataSource datasource) {
+        this.datasource = datasource;
+    }
+
     @Bean
     public UserRepository userRepository() {
-        return memoryUserRepository();
+//        return new MemoryUserRepository();
+        return new JdbcUserRepository(datasource);
     }
 
     @Bean
     public ArticleRepository articleRepository() {
-        return memoryArticleRepository();
-    }
-
-    private MemoryArticleRepository memoryArticleRepository() {
         return new MemoryArticleRepository();
-    }
-
-    private MemoryUserRepository memoryUserRepository() {
-        return new MemoryUserRepository();
     }
 }
