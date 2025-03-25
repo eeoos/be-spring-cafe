@@ -27,7 +27,7 @@ public class UserController {
     public String signUp(@ModelAttribute SignUpRequest request,
                          RedirectAttributes redirectAttributes) { // @ModelAttribute 공부,
         try {
-            userService.join(request);
+            userService.join(request.toEntity());
             return "redirect:/users";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -91,7 +91,7 @@ public class UserController {
                          @ModelAttribute UserUpdateRequest request,
                          RedirectAttributes redirectAttributes) {
         try {
-            userService.updateUser(userSeq, request);
+            userService.updateUser(request.toEntity(userSeq));
             redirectAttributes.addFlashAttribute("message", "회원정보가 성공적으로 수정되었습니다.");
             return "redirect:/users";
         } catch (IllegalArgumentException e) {
