@@ -18,8 +18,8 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public void create(Article article) {
-        articleRepository.save(article);
+    public Long create(Article article) {
+        return articleRepository.save(article);
     }
 
     public List<Article> findArticles() {
