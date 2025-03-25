@@ -2,7 +2,6 @@ package codesquad.codestagram.user.repository.impl;
 
 import codesquad.codestagram.user.domain.User;
 import codesquad.codestagram.user.repository.UserRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,10 @@ public class MemoryUserRepository implements UserRepository {
     private static final AtomicLong sequence = new AtomicLong(0L);
 
     @Override
-    public void save(User user) {
+    public Long save(User user) {
         user.setSeq(sequence.incrementAndGet());
         store.put(user.getSeq(), user);
+        return user.getSeq();
     }
     @Override
     public Optional<User> findBySeq(Long seq) {

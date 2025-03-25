@@ -20,11 +20,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void join(User user) {
+    public Long join(User user) {
 
         validatePassword(user.getPassword());
         //todo: 중복 회원에 대한 검증 필요
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public User findUser(Long seq) {
