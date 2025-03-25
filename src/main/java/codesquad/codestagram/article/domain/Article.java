@@ -1,6 +1,13 @@
 package codesquad.codestagram.article.domain;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Article {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long articleId;
     private String writer;
     private String title;
@@ -10,6 +17,10 @@ public class Article {
         this.writer = writer;
         this.title = title;
         this.content = content;
+    }
+
+    public Article() {
+
     }
 
     public Long getArticleId() {
