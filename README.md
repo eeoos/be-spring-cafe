@@ -73,6 +73,31 @@ Method parameter 'userSeq': Failed to convert value of type 'java.lang.String' t
 ## 고민
 - TDD를 하고 싶기도 하고 테스트 코드를 짜고 싶어서 Spring을 테스트하는 방법에 대해 잠시 학습했다. 하지만 Spring도 모르는데 테스트를 학습하는 것은 순서가 맞지 않는 것 같고 이해하기도 힘들어서 우선 스프링에 대해 학습하려고 한다.
 
+# 3단계
+## 구현 내용
+## 고민
+- 현재 User의 실제값과 기댓값의 참조값이 달라 값을 꺼내서 비교하고 있는데 User 클래스에 hashcode와 equals를 오버라이딩해서 동등성 비교를 해도 적절한건지 의문
+![img_2.png](img_2.png)
+## 문제 해결
+- 문제
+![img_4.png](img_4.png)   
+회원정보 수정 버튼을 눌렀을 때 404가 에러가 떳다.   
+의도대로라면 `localhost:8080/users/{userSeq}`로 가서 `PUT` 요청을 처리해야 하지만 `localhost:8080/users/` 까지만 되어 요청을 처리하지 못하고 404가 터진 것이다. 
+
+![img_3.png](img_3.png)
+![img_5.png](img_5.png)
+수정 폼의 html을 보니 form 태그의 action 속성의 값을 보면 `"/users/"`까지만 적혀 있는 것을 볼 수 있다.
+
+- 원인  
+아래의 사진은 UserService의 update 메서드이다.
+![img_6.png](img_6.png)
+
+첫 번째 줄은 findUser로 기존의 유저를 조회하는 로직인데, 당시에 사용중이던 JdbcUserRepository 구현체에서 유저 정보를 가져와 User 객체를 생성할 때 setSeq를 하지 않아  Model로 넘어가는 User에 seq 값이 없어 action 속성의 값이 `"/users/"`가 된 것이였다.
+![img_7.png](img_7.png)
+- 해결  
+JdbcUserRepository의 findById 메서드에서 User 객체를 생성한 후에 setSeq로 seq 값을 지정해줌으로써 `"users/{userSeq}"`로 요청을 잘 처리할 수 있었다.
+![img_8.png](img_8.png)
+![img_9.png](img_9.png)
 # 학습
 ### PRG 패턴 (POST-REDIRECT-GET)
 - 기본 동작
