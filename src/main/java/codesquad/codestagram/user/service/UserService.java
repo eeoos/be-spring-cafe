@@ -40,7 +40,7 @@ public class UserService {
         User user = findUser(userSeq);
         return inputPassword.equals(user.getPassword());
     }
-    public void updateUser(User updatedUser) {
+    public Long updateUser(User updatedUser) {
         User findUser = findUser(updatedUser.getSeq());
 
         if (updatedUser.getPassword().equals(findUser.getPassword())) {
@@ -57,7 +57,7 @@ public class UserService {
         findUser.setName(updatedUser.getName());
         findUser.setEmail(updatedUser.getEmail());
 
-        userRepository.update(findUser);
+        return userRepository.update(findUser);
     }
 
     private void validatePassword(String password) {
