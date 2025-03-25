@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    void save(User user);
+    Long save(User user);
     Optional<User> findBySeq(Long seq);
     List<User> findAll();
     void update(User updatedUser);
