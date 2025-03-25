@@ -25,12 +25,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String create(@ModelAttribute ArticleRequest request) {
-        Article article = new Article(
-                request.writer(),
-                request.title(),
-                request.contents()
-        );
-        articleService.create(article);
+        articleService.create(request.toEntity());
 
         return "redirect:/";
     }
