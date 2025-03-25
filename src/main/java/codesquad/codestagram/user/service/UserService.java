@@ -6,11 +6,13 @@ import codesquad.codestagram.user.dto.UserUpdateRequest;
 import codesquad.codestagram.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -22,7 +24,7 @@ public class UserService {
 
     public Long join(User user) {
 
-        validatePassword(user.getPassword());
+//        validatePassword(user.getPassword());
         //todo: 중복 회원에 대한 검증 필요
         return userRepository.save(user);
     }
