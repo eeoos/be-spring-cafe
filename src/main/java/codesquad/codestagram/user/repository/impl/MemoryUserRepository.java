@@ -16,10 +16,10 @@ public class MemoryUserRepository implements UserRepository {
     private static final AtomicLong sequence = new AtomicLong(0L);
 
     @Override
-    public Long save(User user) {
+    public User save(User user) {
         user.setSeq(sequence.incrementAndGet());
         store.put(user.getSeq(), user);
-        return user.getSeq();
+        return user;
     }
     @Override
     public Optional<User> findBySeq(Long seq) {
@@ -36,8 +36,8 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Long update(User updatedUser) {
+    public User update(User updatedUser) {
         store.replace(updatedUser.getSeq(), updatedUser);
-        return updatedUser.getSeq();
+        return updatedUser;
     }
 }

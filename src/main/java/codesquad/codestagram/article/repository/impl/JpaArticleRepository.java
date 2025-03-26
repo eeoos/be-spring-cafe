@@ -15,9 +15,9 @@ public class JpaArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Long save(Article article) {
+    public Article save(Article article) {
         em.persist(article);
-        return article.getArticleId();
+        return article;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
     }
 
     @Override
-    public Long save(User user) {
+    public User save(User user) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("member").usingGeneratedKeyColumns("seq");
 
@@ -34,7 +34,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         user.setSeq(key.longValue());
-        return user.getSeq();
+        return user;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
     }
 
     @Override
-    public Long update(User updatedUser) {
+    public User update(User updatedUser) {
         String sql = "update member set userId = ?, password = ?, name = ?, email = ? where seq = ?";
         int rowsAffected = jdbcTemplate.update(sql,
                 updatedUser.getUserId(),
@@ -58,7 +58,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
                 updatedUser.getEmail(),
                 updatedUser.getSeq()
                 );
-        return (rowsAffected > 0) ? updatedUser.getSeq() : null;
+        return (rowsAffected > 0) ? updatedUser: null;
     }
 
     private RowMapper<User> userRowMapper() {

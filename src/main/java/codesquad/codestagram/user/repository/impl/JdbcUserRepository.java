@@ -19,7 +19,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Long save(User user) {
+    public User save(User user) {
         String sql = "insert into member(userId, password, name, email) values(?, ?, ?, ?)";
 
         Connection conn = null;
@@ -43,7 +43,7 @@ public class JdbcUserRepository implements UserRepository {
             } else {
                 throw new SQLException("id 조회 실패");
             }
-            return user.getSeq();
+            return user;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }finally {
@@ -120,7 +120,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Long update(User updatedUser) {
+    public User update(User updatedUser) {
         String sql = "update member set userId = ?, password = ?, name = ?, email = ? WHERE seq = ?";
 
         Connection conn = null;
@@ -140,7 +140,7 @@ public class JdbcUserRepository implements UserRepository {
             if (affectedRows == 0) {
                 throw new SQLException("업데이트할 유저를 찾을 수 없음: " + updatedUser.getSeq());
             }
-            return updatedUser.getSeq();
+            return updatedUser;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }finally {

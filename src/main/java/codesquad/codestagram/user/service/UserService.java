@@ -22,7 +22,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Long join(User user) {
+    public User join(User user) {
 
 //        validatePassword(user.getPassword());
         //todo: 중복 회원에 대한 검증 필요
@@ -42,7 +42,7 @@ public class UserService {
         User user = findUser(userSeq);
         return inputPassword.equals(user.getPassword());
     }
-    public Long updateUser(User updatedUser) {
+    public User updateUser(User updatedUser) {
         User findUser = findUser(updatedUser.getSeq());
 
         if (updatedUser.getPassword().equals(findUser.getPassword())) {

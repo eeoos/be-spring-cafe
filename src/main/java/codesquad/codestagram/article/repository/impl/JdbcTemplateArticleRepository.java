@@ -21,7 +21,7 @@ public class JdbcTemplateArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Long save(Article article) {
+    public Article save(Article article) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("article").usingGeneratedKeyColumns("id");
 
@@ -32,7 +32,7 @@ public class JdbcTemplateArticleRepository implements ArticleRepository {
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         article.setArticleId(key.longValue());
-        return article.getArticleId();
+        return article;
     }
 
     @Override
