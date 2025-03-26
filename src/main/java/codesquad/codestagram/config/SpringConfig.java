@@ -13,7 +13,7 @@ import codesquad.codestagram.user.service.UserService;
 import jakarta.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+// 자바 스프링 db cs(네트워크(HTTP)), os), git
 import javax.sql.DataSource;
 
 @Configuration

@@ -16,10 +16,10 @@ public class MemoryArticleRepository implements ArticleRepository {
     private static final AtomicLong sequence = new AtomicLong(0L);
 
     @Override
-    public Long save(Article article) {
+    public Article save(Article article) {
         article.setArticleId(sequence.incrementAndGet());
         store.put(article.getArticleId(), article);
-        return article.getArticleId();
+        return article;
     }
 
     @Override

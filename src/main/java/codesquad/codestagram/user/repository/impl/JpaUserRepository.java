@@ -15,9 +15,9 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public Long save(User user) {
+    public User save(User user) {
         em.persist(user);
-        return user.getSeq();
+        return user;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public Long update(User updatedUser) {
+    public User update(User updatedUser) {
         User user = em.find(User.class, updatedUser.getSeq());
         if (user != null) {
             user.setUserId(updatedUser.getUserId());
@@ -41,6 +41,6 @@ public class JpaUserRepository implements UserRepository {
             user.setName(updatedUser.getName());
             user.setEmail(updatedUser.getEmail());
         }
-        return (user != null) ? user.getSeq() : null;
+        return user;
     }
 }

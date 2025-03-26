@@ -2,6 +2,7 @@ package codesquad.codestagram.article.repository.impl;
 
 import codesquad.codestagram.article.domain.Article;
 import codesquad.codestagram.article.repository.ArticleRepository;
+import codesquad.codestagram.user.domain.User;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
@@ -19,7 +20,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Long save(Article article) {
+    public Article save(Article article) {
         String sql = "insert into article(writer, title, content) values(?, ?, ?)";
 
         Connection conn = null;
@@ -43,7 +44,7 @@ public class JdbcArticleRepository implements ArticleRepository {
             } else {
                 throw new SQLException("id 조회 실패");
             }
-            return article.getArticleId();
+            return article;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }finally {
