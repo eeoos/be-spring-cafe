@@ -75,29 +75,53 @@ Method parameter 'userSeq': Failed to convert value of type 'java.lang.String' t
 
 # 3단계
 ## 구현 내용
+- db 연결
+- 배포   
+[url](http://3.34.2.22:8080/)
+```
+http://3.34.2.22:8080/
+```
+- 배포 방법  
+1. 프로젝트 빌드
+```
+./gradlew clean build
+```
+2. [scp](#SCP)를 사용하여 ec2 인스턴스로 build된 jar 파일 전송
+```
+scp -i [pem 경로] [jar파일 경로] ubuntu@your-ec2-public-dns:~/
+```
+3. [ssh](#SSH)로 ec2 인스턴스 접속
+4. ec2 인스턴스 전용 `application.yaml` 파일 생성
+   - H2 파일 모드 사용
+5. 애플리케이션 실행
+```
+java -jar codestagram-0.0.1-SNAPSHOT.jar --spring.config.location=file:./config/application.yaml
+// 쉘 스크립트 사용하여 스크립트로 실행
+```
+
 ## 고민
 - 현재 User의 실제값과 기댓값의 참조값이 달라 값을 꺼내서 비교하고 있는데 User 클래스에 hashcode와 equals를 오버라이딩해서 동등성 비교를 해도 적절한건지 의문
 ![img_2.png](img_2.png)
 ## 문제 해결
-- 문제
-![img_4.png](img_4.png)   
+- 문제  
+![img_4.png](img_4.png)     
 회원정보 수정 버튼을 눌렀을 때 404가 에러가 떳다.   
 의도대로라면 `localhost:8080/users/{userSeq}`로 가서 `PUT` 요청을 처리해야 하지만 `localhost:8080/users/` 까지만 되어 요청을 처리하지 못하고 404가 터진 것이다. 
 
 ![img_3.png](img_3.png)
-![img_5.png](img_5.png)
+![img_5.png](img_5.png)  
 수정 폼의 html을 보니 form 태그의 action 속성의 값을 보면 `"/users/"`까지만 적혀 있는 것을 볼 수 있다.
 
 - 원인  
-아래의 사진은 UserService의 update 메서드이다.
-![img_6.png](img_6.png)
+아래의 사진은 UserService의 update 메서드이다.  
+![img_6.png](img_6.png)  
 
-첫 번째 줄은 findUser로 기존의 유저를 조회하는 로직인데, 당시에 사용중이던 JdbcUserRepository 구현체에서 유저 정보를 가져와 User 객체를 생성할 때 setSeq를 하지 않아  Model로 넘어가는 User에 seq 값이 없어 action 속성의 값이 `"/users/"`가 된 것이였다.
-![img_7.png](img_7.png)
+첫 번째 줄은 findUser로 기존의 유저를 조회하는 로직인데, 당시에 사용중이던 JdbcUserRepository 구현체에서 유저 정보를 가져와 User 객체를 생성할 때 setSeq를 하지 않아  Model로 넘어가는 User에 seq 값이 없어 action 속성의 값이 `"/users/"`가 된 것이였다.  
+![img_7.png](img_7.png)  
 - 해결  
 JdbcUserRepository의 findById 메서드에서 User 객체를 생성한 후에 setSeq로 seq 값을 지정해줌으로써 `"users/{userSeq}"`로 요청을 잘 처리할 수 있었다.
-![img_8.png](img_8.png)
-![img_9.png](img_9.png)
+![img_8.png](img_8.png)  
+![img_9.png](img_9.png)  
 # 학습
 ### PRG 패턴 (POST-REDIRECT-GET)
 - 기본 동작
@@ -178,3 +202,36 @@ JdbcUserRepository의 findById 메서드에서 User 객체를 생성한 후에 s
   1. 세션 쿠키(Session Cookies): 만료 시간을 설정하지 않은 쿠키로, 브라우저 세션이 끝나면(브라우저를 닫으면) 자동으로 삭제. 주로 로그인 세션 유지 등에 사용
   2. 영속적 쿠키(Persistent Cookies): 특정 만료 시간(`Expires` or `Max-Age`)이 설정된 쿠키로, 그 시간이 지나기 전까지는 브라우저를 닫았다 열어도 유지. 사용자 선호도 저장, "로그인 상태 유지" 기능 등에 사용
 
+### SSH
+- SSH(Secure Shell)는 네트워크를 통해 원격 컴퓨터에 안전하게 접속하고 명령을 실행할 수 있도록 설계된 암호화된 프로토콜  
+- 주로 원격 서버 관리, 파일 전송, 터널링 등에 사용
+
+- 필요성
+  - 과거에는 Telnet 같은 프로토콜이 사용되었지만, 데이터가 암호화되지 않고 평문으로 전송되었기 때문에 해킹 위험이 큼
+  - SSH는 이를 해결하기 위해 모든 통신을 암호화하여 보안성을 높임
+- 원격 접속 방법
+```
+ssh 사용자이름@서버주소
+```
+ex) 
+```
+ssh ubuntu@192.168.1.10
+// ubuntu 계정으로 192.168.1.10 서버에 접속
+```
+
+
+
+### SCP
+- Secure Copy Protocol의 약자   
+- SSH 기반의 파일 복사 프로토콜로, 원격 서버와 파일을 안전하게 전송할 수 있음
+  - SSH를 이용하므로 암호화되어 보안성이 높음
+  - `scp` 명령어를 사용하여 로컬 <-> 원격 서버 같 파일 복사 가능
+- 사용법
+```
+scp [옵션] [보낼 파일 경로] [사용자@서버주소:목적지 경로]
+```
+ex) 로컬에서 원격 서버로 파일 전송
+```
+scp localfile.txt ubuntu@192.168.1.10:/home/ubuntu/
+// localfile.txt를 192.168.1.10 서버의 /home/ubuntu/ 디렉토리에 전송
+```
