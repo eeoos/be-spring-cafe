@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    Long save(User user);
+    User save(User user);
     Optional<User> findBySeq(Long seq);
     List<User> findAll();
-    Long update(User updatedUser);
+    default User update(User updatedUser){
+        return save(updatedUser);
+    }
 }
